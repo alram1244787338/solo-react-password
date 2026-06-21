@@ -87,6 +87,14 @@
   color: var(--accent-cyan);
 }
 
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
 .cardTitle {
   font-size: 16px;
   font-weight: 600;

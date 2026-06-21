@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Card from '@/components/Card';
 import { useCopy } from '@/hooks';
 import { generatePassword } from '@/utils';
@@ -15,6 +15,9 @@ const DEFAULT_CONFIG: PasswordConfig = {
   includeNumbers: true,
   includeSymbols: true,
 };
+
+const calcPct = (val: number): string =>
+  `${((val - MIN_LENGTH) / (MAX_LENGTH - MIN_LENGTH)) * 100}%`;
 
 interface CheckboxOption {
   key: keyof Omit<PasswordConfig, 'length'>;
@@ -33,6 +36,7 @@ function PasswordGenerator() {
   const [config, setConfig] = useState<PasswordConfig>(DEFAULT_CONFIG);
   const [password, setPassword] = useState('');
   const [copied, copy] = useCopy();
+  const sliderRef = useRef<HTMLInputElement>(null);
 
   const atLeastOne = useMemo(
     () =>
@@ -51,6 +55,12 @@ function PasswordGenerator() {
   useEffect(() => {
     handleGenerate();
   }, []);
+
+  useEffect(() => {
+    if (sliderRef.current) {
+      sliderRef.current.style.setProperty('--pct', calcPct(config.length));
+    }
+  }, [config.length]);
 
   const toggleOption = (key: CheckboxOption['key']) => {
     setConfig((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -90,6 +100,7 @@ function PasswordGenerator() {
             <span className={styles.lengthBadge}>{config.length}</span>
           </div>
           <input
+            ref={sliderRef}
             type="range"
             className={styles.slider}
             min={MIN_LENGTH}
@@ -97,8 +108,9 @@ function PasswordGenerator() {
             step={1}
             value={config.length}
             onChange={(e) => setLength(Number(e.target.value))}
-            style={{
-              ['--pct' as string]: `${((config.length - MIN_LENGTH) / (MAX_LENGTH - MIN_LENGTH)) * 100}%`,
+            onInput={(e) => {
+              const target = e.target as HTMLInputElement;
+              target.style.setProperty('--pct', calcPct(Number(target.value)));
             }}
           />
           <div className={styles.sliderTrack}>
