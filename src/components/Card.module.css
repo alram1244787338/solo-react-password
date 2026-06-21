@@ -1,0 +1,62 @@
+.card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.accentBlue::before {
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-cyan));
+  opacity: 1;
+}
+
+.accentGreen::before {
+  background: linear-gradient(90deg, var(--accent-success), var(--accent-cyan));
+  opacity: 1;
+}
+
+.accentPurple::before {
+  background: linear-gradient(90deg, var(--accent-purple), var(--accent-primary));
+  opacity: 1;
+}
+
+.accentCyan::before {
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-success));
+  opacity: 1;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.title {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.desc {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
