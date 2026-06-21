@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Card from '@/components/Card';
 import { useCopy } from '@/hooks';
-import { generatePassword } from '@/utils';
+import { generatePassword, calcSliderPct } from '@/utils';
 import type { PasswordConfig } from '@/types';
 import styles from './PasswordGenerator.module.css';
 
@@ -16,8 +16,7 @@ const DEFAULT_CONFIG: PasswordConfig = {
   includeSymbols: true,
 };
 
-const calcPct = (val: number): string =>
-  `${((val - MIN_LENGTH) / (MAX_LENGTH - MIN_LENGTH)) * 100}%`;
+const calcPct = (val: number): string => calcSliderPct(val, MIN_LENGTH, MAX_LENGTH);
 
 interface CheckboxOption {
   key: keyof Omit<PasswordConfig, 'length'>;

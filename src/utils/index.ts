@@ -17,6 +17,11 @@ export const generateId = (): string => {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 };
 
+export const calcSliderPct = (val: number, min: number, max: number): string => {
+  if (max <= min) return '0%';
+  return `${Math.max(0, Math.min(100, ((val - min) / (max - min)) * 100))}%`;
+};
+
 const CHARS = {
   uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
   lowercase: 'abcdefghijklmnopqrstuvwxyz',

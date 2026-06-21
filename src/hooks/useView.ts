@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { ViewName } from '@/types';
 
-const VALID_VIEWS: ViewName[] = ['home', 'generator', 'strength', 'passphrase', 'vault'];
+export const VALID_VIEWS: ViewName[] = ['home', 'generator', 'strength', 'passphrase', 'vault'];
 
-const parseHash = (fallback: ViewName = 'home'): ViewName => {
-  const raw = window.location.hash.replace(/^#\/?/, '').trim().toLowerCase();
+export const parseHash = (hash: string, fallback: ViewName = 'home'): ViewName => {
+  const raw = hash.replace(/^#\/?/, '').trim().toLowerCase();
   if (!raw) return fallback;
   return (VALID_VIEWS as string[]).includes(raw) ? (raw as ViewName) : fallback;
 };
@@ -12,12 +12,12 @@ const parseHash = (fallback: ViewName = 'home'): ViewName => {
 export function useView(initial?: ViewName): [ViewName, (view: ViewName) => void] {
   const [view, setViewState] = useState<ViewName>(() => {
     if (typeof window === 'undefined') return initial ?? 'home';
-    return parseHash(initial);
+    return parseHash(window.location.hash, initial);
   });
 
   useEffect(() => {
     const onHashChange = () => {
-      setViewState(parseHash());
+      setViewState(parseHash(window.location.hash));
     };
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
@@ -35,7 +35,9 @@ export function useView(initial?: ViewName): [ViewName, (view: ViewName) => void
         }
       }
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }, []);
 
   return [view, navigate];
